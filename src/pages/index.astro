@@ -2,9 +2,12 @@
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import ProductCard from '../components/ProductCard.astro';
-import products from '../data/products.json';
+import { getCollection } from 'astro:content';
 
-const featured = products.slice(0, 3);
+const allProducts = await getCollection('products');
+const featured = allProducts.slice(0, 3);
+
+export const prerender = true;
 ---
 
 <Layout title="产品官网 - 首页">
@@ -13,15 +16,18 @@ const featured = products.slice(0, 3);
 		<div class="container">
 			<h2>热门产品</h2>
 			<div class="product-grid">
-				{featured.map((product) => (
-					<ProductCard
-						id={product.id}
-						name={product.name}
-						description={product.description}
-						price={product.price}
-						image={product.image}
-					/>
-				))}
+				{featured.map((entry) => {
+					const { name, description, price, image } = entry.data;
+					return (
+						<ProductCard
+							id={entry.id}
+							name={name}
+							description={description}
+							price={price}
+							image={image}
+						/>
+					);
+				})}
 			</div>
 			<div class="featured-cta">
 				<a href="/products" class="btn btn-outline">查看全部产品</a>

@@ -1,0 +1,18 @@
+{
+  "name": "便携投影仪",
+  "category": "影音设备",
+  "description": "口袋大小，1080P 高清投影",
+  "details": "仅重 280g，可轻松放入口袋。原生 1080P 分辨率，500 ANSI 流明亮度，自动对焦与梯形校正。内置安卓系统，支持无线投屏。",
+  "price": 2499,
+  "image": "/products/product-003.jpg",
+  "specs": {
+    "spec1Key": "分辨率",
+    "spec1Value": "1080P",
+    "spec2Key": "亮度",
+    "spec2Value": "500 ANSI流明",
+    "spec3Key": "重量",
+    "spec3Value": "280g",
+    "spec4Key": "系统",
+    "spec4Value": "Android"
+  }
+}
