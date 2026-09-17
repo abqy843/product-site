@@ -1,0 +1,81 @@
+---
+import products from '../../data/products.json';
+
+const PER_PAGE = 12;
+
+export async function getStaticPaths() {
+	const perPage = 12;
+	const totalPages = Math.ceil(products.length / perPage);
+	return Array.from({ length: totalPages }, (_, i) => ({
+		params: { page: String(i + 1) },
+		props: { page: i + 1 },
+	}));
+}
+
+const { page } = Astro.props;
+const start = (page - 1) * PER_PAGE;
+const end = start + PER_PAGE;
+const pageProducts = products.slice(start, end);
+const totalPages = Math.ceil(products.length / PER_PAGE);
+
+import Layout from '../../layouts/Layout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import Pagination from '../../components/Pagination.astro';
+---
+
+<Layout title={`产品列表 - 第${page}页`}>
+	<section class="products-page">
+		<div class="container">
+			<h1>全部产品</h1>
+			<p class="subtitle">共 {products.length} 件产品</p>
+			<div class="product-grid">
+				{pageProducts.map((product) => (
+					<ProductCard
+						id={product.id}
+						name={product.name}
+						description={product.description}
+						price={product.price}
+						image={product.image}
+					/>
+				))}
+			</div>
+			<Pagination current={page} total={totalPages} basePath="/products" />
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.products-page {
+		padding: 48px 0 32px;
+	}
+
+	.products-page h1 {
+		font-size: 1.75rem;
+		font-weight: 700;
+	}
+
+	.subtitle {
+		font-size: 0.875rem;
+		color: var(--color-text-secondary);
+		margin-top: 4px;
+		margin-bottom: 32px;
+	}
+
+	.product-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 24px;
+	}
+
+	@media (max-width: 768px) {
+		.product-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (min-width: 769px) and (max-width: 1024px) {
+		.product-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+</style>

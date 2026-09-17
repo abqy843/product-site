@@ -1,0 +1,153 @@
+---
+import products from '../../data/products.json';
+
+export async function getStaticPaths() {
+	return products.map((product) => ({
+		params: { id: product.id },
+		props: { product },
+	}));
+}
+
+const { product } = Astro.props;
+
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title={`${product.name} - 产品详情`} description={product.description}>
+	<section class="product-detail">
+		<div class="container">
+			<a href="/products" class="back-link">← 返回产品列表</a>
+			<div class="product-layout">
+				<div class="product-image">
+					<img src={product.image} alt={product.name} />
+				</div>
+				<div class="product-info">
+					<span class="product-category">{product.category}</span>
+					<h1>{product.name}</h1>
+					<p class="product-price">¥{product.price.toLocaleString()}</p>
+					<p class="product-desc">{product.details}</p>
+					{Object.keys(product.specs).length > 0 && (
+						<div class="product-specs">
+							<h2>产品规格</h2>
+							<table>
+								<tbody>
+									{Object.entries(product.specs).map(([key, value]) => (
+										<tr>
+											<td class="spec-key">{key}</td>
+											<td>{value}</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+						</div>
+					)}
+				</div>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.product-detail {
+		padding: 32px 0 64px;
+	}
+
+	.back-link {
+		display: inline-block;
+		font-size: 0.875rem;
+		color: var(--color-text-secondary);
+		margin-bottom: 24px;
+		transition: color 0.2s;
+	}
+
+	.back-link:hover {
+		color: var(--color-primary);
+	}
+
+	.product-layout {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 48px;
+		align-items: start;
+	}
+
+	.product-image {
+		border-radius: var(--radius);
+		overflow: hidden;
+		background: var(--color-bg-secondary);
+		aspect-ratio: 4 / 3;
+	}
+
+	.product-image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.product-info {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.product-category {
+		display: inline-block;
+		font-size: 0.75rem;
+		font-weight: 600;
+		color: var(--color-primary);
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.product-info h1 {
+		font-size: 1.75rem;
+		font-weight: 700;
+		line-height: 1.3;
+	}
+
+	.product-price {
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: var(--color-primary);
+	}
+
+	.product-desc {
+		font-size: 0.9375rem;
+		color: var(--color-text-secondary);
+		line-height: 1.7;
+	}
+
+	.product-specs {
+		margin-top: 16px;
+	}
+
+	.product-specs h2 {
+		font-size: 1rem;
+		font-weight: 600;
+		margin-bottom: 12px;
+	}
+
+	.product-specs table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+
+	.product-specs td {
+		padding: 8px 12px;
+		font-size: 0.875rem;
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.spec-key {
+		font-weight: 500;
+		color: var(--color-text-secondary);
+		width: 120px;
+	}
+
+	@media (max-width: 768px) {
+		.product-layout {
+			grid-template-columns: 1fr;
+			gap: 24px;
+		}
+	}
+</style>

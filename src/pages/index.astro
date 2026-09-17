@@ -1,0 +1,67 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import ProductCard from '../components/ProductCard.astro';
+import products from '../data/products.json';
+
+const featured = products.slice(0, 3);
+---
+
+<Layout title="产品官网 - 首页">
+	<Hero />
+	<section class="featured">
+		<div class="container">
+			<h2>热门产品</h2>
+			<div class="product-grid">
+				{featured.map((product) => (
+					<ProductCard
+						id={product.id}
+						name={product.name}
+						description={product.description}
+						price={product.price}
+						image={product.image}
+					/>
+				))}
+			</div>
+			<div class="featured-cta">
+				<a href="/products" class="btn btn-outline">查看全部产品</a>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.featured {
+		padding: 64px 0;
+	}
+
+	.featured h2 {
+		font-size: 1.5rem;
+		font-weight: 700;
+		margin-bottom: 32px;
+	}
+
+	.product-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 24px;
+	}
+
+	.featured-cta {
+		display: flex;
+		justify-content: center;
+		margin-top: 40px;
+	}
+
+	@media (max-width: 768px) {
+		.product-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (min-width: 769px) and (max-width: 1024px) {
+		.product-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+</style>
