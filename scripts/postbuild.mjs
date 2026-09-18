@@ -8,15 +8,9 @@ try {
 
   const pagesConfig = {
     name: original.name || 'product-site',
-    main: original.main || 'entry.mjs',
     compatibility_date: original.compatibility_date || '2026-09-17',
     compatibility_flags: ['nodejs_compat'],
-    assets: {
-      directory: original.assets?.directory || '../client',
-    },
-    rules: original.rules,
     pages_build_output_dir: '../',
-    no_bundle: true,
   };
 
   writeFileSync(wranglerPath, JSON.stringify(pagesConfig, null, 2));
