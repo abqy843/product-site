@@ -1,32 +1,16 @@
 ---
-import { getCollection, getEntry } from 'astro:content';
+import products from '../../data/products.json';
 
 export async function getStaticPaths() {
-	const allProducts = await getCollection('products');
-	return allProducts.map((entry) => ({
-		params: { id: entry.id },
-		props: { product: entry.data },
+	return products.map((product) => ({
+		params: { id: product.id },
+		props: { product },
 	}));
 }
 
-const { id } = Astro.params;
-const entry = await getEntry('products', id!);
-const product = entry!.data;
+const { product } = Astro.props;
 
 import Layout from '../../layouts/Layout.astro';
-
-export const prerender = true;
-
-function getSpecsMap(data: typeof product): Record<string, string> {
-	const result: Record<string, string> = {};
-	if (data.specs.spec1Key && data.specs.spec1Value) result[data.specs.spec1Key] = data.specs.spec1Value;
-	if (data.specs.spec2Key && data.specs.spec2Value) result[data.specs.spec2Key] = data.specs.spec2Value;
-	if (data.specs.spec3Key && data.specs.spec3Value) result[data.specs.spec3Key] = data.specs.spec3Value;
-	if (data.specs.spec4Key && data.specs.spec4Value) result[data.specs.spec4Key] = data.specs.spec4Value;
-	return result;
-}
-
-const specsMap = getSpecsMap(product);
 ---
 
 <Layout title={`${product.name} - 产品详情`} description={product.description}>
@@ -42,12 +26,12 @@ const specsMap = getSpecsMap(product);
 					<h1>{product.name}</h1>
 					<p class="product-price">¥{product.price.toLocaleString()}</p>
 					<p class="product-desc">{product.details}</p>
-					{Object.keys(specsMap).length > 0 && (
+					{Object.keys(product.specs).length > 0 && (
 						<div class="product-specs">
 							<h2>产品规格</h2>
 							<table>
 								<tbody>
-									{Object.entries(specsMap).map(([key, value]) => (
+									{Object.entries(product.specs).map(([key, value]) => (
 										<tr>
 											<td class="spec-key">{key}</td>
 											<td>{value}</td>

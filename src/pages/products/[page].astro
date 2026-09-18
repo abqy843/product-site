@@ -1,12 +1,11 @@
 ---
-import { getCollection } from 'astro:content';
+import products from '../../data/products.json';
 
 const PER_PAGE = 12;
 
 export async function getStaticPaths() {
-	const allProducts = await getCollection('products');
 	const perPage = 12;
-	const totalPages = Math.ceil(allProducts.length / perPage);
+	const totalPages = Math.ceil(products.length / perPage);
 	return Array.from({ length: totalPages }, (_, i) => ({
 		params: { page: String(i + 1) },
 		props: { page: i + 1 },
@@ -14,37 +13,31 @@ export async function getStaticPaths() {
 }
 
 const { page } = Astro.props;
-const allProducts = await getCollection('products');
 const start = (page - 1) * PER_PAGE;
 const end = start + PER_PAGE;
-const pageProducts = allProducts.slice(start, end);
-const totalPages = Math.ceil(allProducts.length / PER_PAGE);
+const pageProducts = products.slice(start, end);
+const totalPages = Math.ceil(products.length / PER_PAGE);
 
 import Layout from '../../layouts/Layout.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import Pagination from '../../components/Pagination.astro';
-
-export const prerender = true;
 ---
 
 <Layout title={`产品列表 - 第${page}页`}>
 	<section class="products-page">
 		<div class="container">
 			<h1>全部产品</h1>
-			<p class="subtitle">共 {allProducts.length} 件产品</p>
+			<p class="subtitle">共 {products.length} 件产品</p>
 			<div class="product-grid">
-				{pageProducts.map((entry) => {
-					const { name, description, price, image } = entry.data;
-					return (
-						<ProductCard
-							id={entry.id}
-							name={name}
-							description={description}
-							price={price}
-							image={image}
-						/>
-					);
-				})}
+				{pageProducts.map((product) => (
+					<ProductCard
+						id={product.id}
+						name={product.name}
+						description={product.description}
+						price={product.price}
+						image={product.image}
+					/>
+				))}
 			</div>
 			<Pagination current={page} total={totalPages} basePath="/products" />
 		</div>
